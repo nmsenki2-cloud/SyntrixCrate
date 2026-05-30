@@ -1,0 +1,176 @@
+# ================================
+#      SyntrixCrate Konfiguráció
+# ================================
+
+messages:
+  prefix: "&8[&6SyntrixCrate&8] &r"
+  no-permission: "&cNincs jogosultságod!"
+  no-key: "&cNincs kulcsod ehhez a ládához! (&e{crate}&c)"
+  crate-opened: "&aKinyitottad a(z) &e{crate} &aládát!"
+  reward-received: "&aKaptad: &e{reward}"
+  key-given: "&aAdtál &e{amount}x {crate} &akulcsot &b{player}&a-nak."
+  key-received: "&aKaptál &e{amount}x {crate}&a kulcsot!"
+  crate-set: "&aLáda elhelyezve: &e{crate} &a- blokk: &7{location}"
+  crate-removed: "&aLáda eltávolítva."
+  crate-not-found: "&cNem találtam ládát itt."
+  on-cooldown: "&cVárj még &e{time} &cmásodpercet mielőtt újra kinyitod!"
+  invalid-crate: "&cIsmeretlen láda típus: &e{crate}"
+  player-not-found: "&cJátékos nem található: &e{player}"
+  reload-done: "&aKonfiguráció újratöltve."
+  gui-title-select: "&8Válassz jutalmat - &6{crate}"
+  already-opening: "&cMár nyitsz egy ládát!"
+
+default-cooldown: 0
+
+crates:
+  common:
+    display-name: "&aKözönséges Láda"
+    block-type: CHEST
+    key:
+      material: TRIPWIRE_HOOK
+      name: "&aKözönséges Kulcs"
+      lore:
+        - "&7Közönséges láda kulcsa"
+        - "&7Jobb klikk a ládára a megnyitáshoz"
+    cooldown: 5
+    player-choice: true
+    rewards-shown: 9
+    rewards:
+      diamond:
+        display-name: "&bGyémánt"
+        material: DIAMOND
+        amount: 1
+        chance: 10
+        lore:
+          - "&7Ritka ásványi anyag"
+        actions:
+          - "[GIVE] DIAMOND 1"
+      gold:
+        display-name: "&6Arany Rúd"
+        material: GOLD_INGOT
+        amount: 5
+        chance: 40
+        lore:
+          - "&7Közönséges fém"
+        actions:
+          - "[GIVE] GOLD_INGOT 5"
+      iron:
+        display-name: "&7Vas Rúd"
+        material: IRON_INGOT
+        amount: 10
+        chance: 50
+        lore:
+          - "&7Hasznos alapanyag"
+        actions:
+          - "[GIVE] IRON_INGOT 10"
+
+  rare:
+    display-name: "&bRitka Láda"
+    block-type: BARREL
+    key:
+      material: TRIPWIRE_HOOK
+      name: "&bRitka Kulcs"
+      lore:
+        - "&7Ritka láda kulcsa"
+        - "&7Jobb klikk a ládára a megnyitáshoz"
+    cooldown: 30
+    player-choice: true
+    rewards-shown: 9
+    rewards:
+      netherite:
+        display-name: "&5Netherite Rúd"
+        material: NETHERITE_INGOT
+        amount: 1
+        chance: 5
+        lore:
+          - "&5Rendkívül ritka anyag"
+        actions:
+          - "[GIVE] NETHERITE_INGOT 1"
+          - "[MESSAGE] &5Szenzációs! Netherite-ot kaptál!"
+      diamond_5:
+        display-name: "&bGyémánt x5"
+        material: DIAMOND
+        amount: 5
+        chance: 20
+        lore:
+          - "&7Ritka ásványi anyag"
+        actions:
+          - "[GIVE] DIAMOND 5"
+      emerald:
+        display-name: "&aEmerald x3"
+        material: EMERALD
+        amount: 3
+        chance: 35
+        lore:
+          - "&7Kereskedési valuta"
+        actions:
+          - "[GIVE] EMERALD 3"
+      gold_block:
+        display-name: "&6Arany Blokk"
+        material: GOLD_BLOCK
+        amount: 2
+        chance: 40
+        lore:
+          - "&7Fényes és értékes"
+        actions:
+          - "[GIVE] GOLD_BLOCK 2"
+
+  legendary:
+    display-name: "&6&lLegendás Láda"
+    block-type: ENDER_CHEST
+    key:
+      material: NETHER_STAR
+      name: "&6&lLegendás Kulcs"
+      lore:
+        - "&7Legendás láda kulcsa"
+        - "&eEz egy különleges tárgy!"
+        - "&7Jobb klikk a ládára a megnyitáshoz"
+    cooldown: 300
+    player-choice: true
+    rewards-shown: 9
+    rewards:
+      enchanted_sword:
+        display-name: "&6Legendás Kard"
+        material: DIAMOND_SWORD
+        amount: 1
+        chance: 10
+        enchanted: true
+        lore:
+          - "&7Egy hatalmas kard"
+          - "&cSharpness V, Unbreaking III"
+        actions:
+          - "[GIVE_ENCHANTED] DIAMOND_SWORD 1 SHARPNESS:5,UNBREAKING:3"
+          - "[MESSAGE] &6Elképesztő! Legendás kardot kaptál!"
+          - "[TITLE] &6Gratulálok!;&eLegendás kard"
+      op_kit:
+        display-name: "&bOP Kit"
+        material: CHEST
+        amount: 1
+        chance: 15
+        lore:
+          - "&7Teljes OP felszerelés"
+        actions:
+          - "[GIVE] DIAMOND_HELMET 1"
+          - "[GIVE] DIAMOND_CHESTPLATE 1"
+          - "[GIVE] DIAMOND_LEGGINGS 1"
+          - "[GIVE] DIAMOND_BOOTS 1"
+          - "[MESSAGE] &bOP Kitet kaptál!"
+      money:
+        display-name: "&a$50,000"
+        material: SUNFLOWER
+        amount: 1
+        chance: 30
+        lore:
+          - "&7Sok pénz"
+        actions:
+          - "[CONSOLE] eco give {player} 50000"
+          - "[MESSAGE] &aKaptál $50,000-t!"
+      xp:
+        display-name: "&aXP Bomba"
+        material: EXPERIENCE_BOTTLE
+        amount: 64
+        chance: 45
+        lore:
+          - "&764 XP üveg"
+        actions:
+          - "[GIVE] EXPERIENCE_BOTTLE 64"
