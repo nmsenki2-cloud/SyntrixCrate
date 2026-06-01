@@ -19,6 +19,8 @@ messages:
   reload-done: "&aKonfiguráció újratöltve."
   gui-title-select: "&8Válassz jutalmat - &6{crate}"
   already-opening: "&cMár nyitsz egy ládát!"
+  editor-title: "&8SyntrixCrate Editor"
+  editor-saved: "&aBeállítások elmentve!"
 
 default-cooldown: 0
 
@@ -26,6 +28,17 @@ crates:
   common:
     display-name: "&aKözönséges Láda"
     block-type: CHEST
+    hologram:
+      enabled: true
+      lines:
+        - "&6&lKÖZÖNSÉGES LÁDA"
+        - "&aJobb klikk a megnyitáshoz"
+        - "&7Kulcs szükséges"
+      height: 1.5
+    animation:
+      type: SPINNING
+      particle: VILLAGER_HAPPY
+      particle-count: 10
     key:
       material: TRIPWIRE_HOOK
       name: "&aKözönséges Kulcs"
@@ -67,6 +80,17 @@ crates:
   rare:
     display-name: "&bRitka Láda"
     block-type: BARREL
+    hologram:
+      enabled: true
+      lines:
+        - "&b&lRITKA LÁDA"
+        - "&7Jobb klikk a megnyitáshoz"
+        - "&bKulcs szükséges"
+      height: 1.5
+    animation:
+      type: SPINNING
+      particle: SPELL_WITCH
+      particle-count: 15
     key:
       material: TRIPWIRE_HOOK
       name: "&bRitka Kulcs"
@@ -118,6 +142,17 @@ crates:
   legendary:
     display-name: "&6&lLegendás Láda"
     block-type: ENDER_CHEST
+    hologram:
+      enabled: true
+      lines:
+        - "&6&l✦ LEGENDÁS LÁDA ✦"
+        - "&eJobb klikk a megnyitáshoz"
+        - "&6Legendás kulcs szükséges"
+      height: 1.5
+    animation:
+      type: SPINNING
+      particle: FLAME
+      particle-count: 20
     key:
       material: NETHER_STAR
       name: "&6&lLegendás Kulcs"
