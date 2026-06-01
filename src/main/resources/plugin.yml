@@ -2,13 +2,15 @@ name: SyntrixCrate
 version: 1.0.0
 main: com.syntrixcrate.SyntrixCrate
 api-version: 1.20
-description: SyntrixCrate - Saját crate plugin
+description: SyntrixCrate - Saját crate plugin editor-ral, hologrammal, animációval
 author: TeNevéd
+
+softdepend: [DecentHolograms]
 
 commands:
   crates:
     description: Crate plugin parancsok
-    usage: /crates <help|set|remove|give|key|reload|list>
+    usage: /crates <help|set|remove|give|key|reload|list|editor>
     aliases: [syntrix, sc, cr]
 
 permissions:
