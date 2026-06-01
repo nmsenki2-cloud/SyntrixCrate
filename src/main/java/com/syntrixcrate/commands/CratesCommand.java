@@ -20,9 +20,7 @@ public class CratesCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (args.length == 0 || args[0].equalsIgnoreCase("help")) {
-            sendHelp(sender); return true;
-        }
+        if (args.length == 0 || args[0].equalsIgnoreCase("help")) { sendHelp(sender); return true; }
 
         switch (args[0].toLowerCase()) {
             case "set" -> {
@@ -34,7 +32,11 @@ public class CratesCommand implements CommandExecutor, TabCompleter {
                 }
                 var block = player.getTargetBlockExact(5);
                 if (block == null) { player.sendMessage(SyntrixCrate.colorize("&cNézz egy blokkra!")); return true; }
-                plugin.getCrateManager().setCrateLocation(block.getLocation(), args[1]);
+                var loc = block.getLocation();
+                plugin.getCrateManager().setCrateLocation(loc, args[1]);
+                CrateType crate = plugin.getCrateManager().getCrateType(args[1]);
+                plugin.getHologramManager().createHologram(loc, crate);
+                plugin.getAnimationManager().startAnimation(loc, crate);
                 player.sendMessage(plugin.msg("crate-set")
                         .replace("{crate}", args[1])
                         .replace("{location}", block.getX() + "," + block.getY() + "," + block.getZ()));
@@ -46,7 +48,10 @@ public class CratesCommand implements CommandExecutor, TabCompleter {
                 if (block == null || !plugin.getCrateManager().isCrate(block.getLocation())) {
                     player.sendMessage(plugin.msg("crate-not-found")); return true;
                 }
-                plugin.getCrateManager().removeCrateLocation(block.getLocation());
+                var loc = block.getLocation();
+                plugin.getHologramManager().removeHologram(loc);
+                plugin.getAnimationManager().stopAnimation(loc);
+                plugin.getCrateManager().removeCrateLocation(loc);
                 player.sendMessage(plugin.msg("crate-removed"));
             }
             case "give" -> {
@@ -73,6 +78,20 @@ public class CratesCommand implements CommandExecutor, TabCompleter {
                 plugin.getKeyManager().giveKey(player, args[1], 1);
                 player.sendMessage(plugin.msg("key-received").replace("{amount}", "1").replace("{crate}", args[1]));
             }
+            case "editor" -> {
+                if (!checkAdmin(sender)) return true;
+                if (!(sender instanceof Player player)) { sender.sendMessage("Csak játékos!"); return true; }
+                if (args.length < 2) {
+                    player.sendMessage(SyntrixCrate.colorize("&6--- Ládák ---"));
+                    plugin.getCrateManager().getAllCrateTypes().keySet()
+                            .forEach(id -> player.sendMessage(SyntrixCrate.colorize("&e/crates editor " + id)));
+                    return true;
+                }
+                if (plugin.getCrateManager().getCrateType(args[1]) == null) {
+                    player.sendMessage(plugin.msg("invalid-crate").replace("{crate}", args[1])); return true;
+                }
+                plugin.getCrateListener().getEditorGUI().openMainEditor(player, args[1]);
+            }
             case "list" -> {
                 if (!checkAdmin(sender)) return true;
                 sender.sendMessage(SyntrixCrate.colorize("&6--- Elérhető ládák ---"));
@@ -83,8 +102,12 @@ public class CratesCommand implements CommandExecutor, TabCompleter {
             }
             case "reload" -> {
                 if (!checkAdmin(sender)) return true;
+                plugin.getHologramManager().removeAll();
+                plugin.getAnimationManager().stopAll();
                 plugin.reloadConfig();
                 plugin.getCrateManager().loadCrateTypes();
+                plugin.getHologramManager().loadAll();
+                plugin.getAnimationManager().loadAll();
                 sender.sendMessage(plugin.msg("reload-done"));
             }
             default -> sendHelp(sender);
@@ -93,10 +116,7 @@ public class CratesCommand implements CommandExecutor, TabCompleter {
     }
 
     private boolean checkAdmin(CommandSender sender) {
-        if (!sender.hasPermission("mycrates.admin")) {
-            sender.sendMessage(plugin.msg("no-permission"));
-            return false;
-        }
+        if (!sender.hasPermission("mycrates.admin")) { sender.sendMessage(plugin.msg("no-permission")); return false; }
         return true;
     }
 
@@ -106,25 +126,26 @@ public class CratesCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage(SyntrixCrate.colorize("&e/crates remove &7- Láda törlése"));
         sender.sendMessage(SyntrixCrate.colorize("&e/crates give <játékos> <típus> [db] &7- Kulcs adása"));
         sender.sendMessage(SyntrixCrate.colorize("&e/crates key <típus> &7- Kulcs adása magadnak"));
+        sender.sendMessage(SyntrixCrate.colorize("&e/crates editor <típus> &7- In-game editor"));
         sender.sendMessage(SyntrixCrate.colorize("&e/crates list &7- Ládatípusok listája"));
         sender.sendMessage(SyntrixCrate.colorize("&e/crates reload &7- Config újratöltése"));
+        sender.sendMessage(SyntrixCrate.colorize("&7Tipp: Shift+Jobb klikk a ládán = gyors editor"));
     }
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
         List<String> completions = new ArrayList<>();
         if (!sender.hasPermission("mycrates.admin")) return completions;
-        if (args.length == 1) completions.addAll(Arrays.asList("set", "remove", "give", "key", "list", "reload", "help"));
+        if (args.length == 1) completions.addAll(Arrays.asList("set","remove","give","key","editor","list","reload","help"));
         else if (args.length == 2) {
-            if (args[0].equalsIgnoreCase("set") || args[0].equalsIgnoreCase("key"))
+            if (List.of("set","key","editor").contains(args[0].toLowerCase()))
                 completions.addAll(plugin.getCrateManager().getAllCrateTypes().keySet());
             else if (args[0].equalsIgnoreCase("give"))
                 plugin.getServer().getOnlinePlayers().forEach(p -> completions.add(p.getName()));
         } else if (args.length == 3 && args[0].equalsIgnoreCase("give"))
             completions.addAll(plugin.getCrateManager().getAllCrateTypes().keySet());
         else if (args.length == 4 && args[0].equalsIgnoreCase("give"))
-            completions.addAll(Arrays.asList("1", "5", "10", "64"));
-
+            completions.addAll(Arrays.asList("1","5","10","64"));
         String lower = args[args.length - 1].toLowerCase();
         completions.removeIf(s -> !s.toLowerCase().startsWith(lower));
         return completions;
